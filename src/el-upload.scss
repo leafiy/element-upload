@@ -1,0 +1,34 @@
+.el-upload-list2 {
+  margin: 10px 0;
+  padding: 0;
+
+  &__item {
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    padding: 5px;
+    margin-bottom: 10px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .el-progress{
+    position: absolute;
+    width: 100%;
+    left:0;
+    top:50%;
+    transform: translateY(-50%);
+  }
+}
+
+.el-upload-list2__item-thumbnail {
+  display: flex;
+  align-items: center;
+  &-img {
+    width: 140px;
+    height: 90px;
+    background-size: cover;
+    background-position: 50% 50%;
+    margin-right: 10px;
+  }
+}
