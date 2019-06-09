@@ -1,0 +1,12 @@
+{
+  "name": "element-upload-enhance",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "git@github.com:leafiy/element-upload.git",
+  "author": "leafiy <t@leafiy.com>",
+  "license": "MIT",
+  "dependencies": {
+    "element-ui": "^2.9.1",
+    "vuedraggable": "^2.21.0"
+  }
+}
