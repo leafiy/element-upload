@@ -3,7 +3,7 @@
     <draggable v-model="filesClone" @start="drag=true" @end="drag=false">
       <li v-for="file in files" :class="['el-upload-list2__item', 'is-' + file.status, focusing ? 'focusing' : '']" :key="file.uid" tabindex="0" @keydown.delete="!disabled && $emit('remove', file)" @focus="focusing = true" @blur="focusing = false" @click="focusing = false">
         <div class="el-upload-list2__item-thumbnail" @click="handleClick(file)">
-          <div class="el-upload-list2__item-thumbnail-img" :style="'background-image:url(' +file.raw.url+ ')'"></div>
+          <div class="el-upload-list2__item-thumbnail-img" :style="'background-image:url(' +file.url+ ')'"></div>
           {{file.name}}
         </div>
         <label class="el-upload-list2__item-status-label">
