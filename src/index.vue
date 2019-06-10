@@ -89,6 +89,12 @@ export default {
                 return [];
             }
         },
+        value: {
+            type: Array,
+            default () {
+                return [];
+            }
+        },
         autoUpload: {
             type: Boolean,
             default: true
@@ -131,6 +137,9 @@ export default {
                     return item;
                 });
             }
+        },
+        uploadFiles(uploadFiles) {
+            this.$emit('input', uploadFiles)
         }
     },
 
@@ -152,7 +161,6 @@ export default {
                 console.error('[Element Error][Upload]', err);
                 return;
             }
-            console.log(file)
 
             this.uploadFiles.push(file);
             this.onChange(file, this.uploadFiles);
