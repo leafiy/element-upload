@@ -1,27 +1,27 @@
 <template>
-  <ul class="el-upload-list2">
-    <draggable v-model="filesClone" @start="drag=true" @end="drag=false">
-      <li v-for="file in files" :class="['el-upload-list2__item', 'is-' + file.status, focusing ? 'focusing' : '']" :key="file.uid" tabindex="0" @keydown.delete="!disabled && $emit('remove', file)" @focus="focusing = true" @blur="focusing = false" @click="focusing = false">
-        <div class="el-upload-list2__item-thumbnail" @click="handleClick(file)">
-          <div class="el-upload-list2__item-thumbnail-img" :style="'background-image:url(' +file.url+ ')'"></div>
-          {{file.name}}
-        </div>
-        <label class="el-upload-list2__item-status-label">
-          <i class="el-icon-upload-success"></i>
-        </label>
-        <el-progress v-if="file.status === 'uploading'" :text-inside="true" :stroke-width="20" :percentage="parsePercentage(file.percentage)">
-        </el-progress>
-        <span class="el-upload-list2__item-actions">
-          <span class="el-upload-list2__item-preview" v-if="handlePreview" @click="handlePreview(file)">
-            <i class="el-icon-zoom-in"></i>
-          </span>
-          <span v-if="!disabled" class="el-upload-list2__item-delete" @click="$emit('remove', file)">
-            <i class="el-icon-delete"></i>
-          </span>
-        </span>
-      </li>
-    </draggable>
-  </ul>
+    <div>
+        <draggable v-model="filesClone" @start="drag=true" @end="drag=false" class="el-upload-list2">
+            <div v-for="file in files" :class="['el-upload-list2__item', 'is-' + file.status]" :key="file.uid" tabindex="0">
+                <div class="el-upload-list2__item-thumbnail" @click="handleClick(file)">
+                    <div class="el-upload-list2__item-thumbnail-img" :style="'background-image:url(' +file.url+ ')'"></div>
+                    {{file.name}}
+                </div>
+                <el-progress v-if="file.status === 'uploading'" :text-inside="true" :stroke-width="20" :percentage="parsePercentage(file.percentage)">
+                </el-progress>
+                <span class="el-upload-list2__item-actions">
+                    <span class="el-upload-list2__item-preview" v-if="handlePreview && file.status ==='success'" @click="handlePreview(file)">
+                        <i class="el-icon-zoom-in"></i>
+                    </span>
+                    <span v-if="file.status ==='success'" class="el-upload-list2__item-delete" @click="$emit('remove', file)">
+                        <i class="el-icon-delete"></i>
+                    </span>
+                    <span v-if="file.status !== 'success'" class="el-upload-list2__item-delete" @click="$emit('abort', file)">
+                        <i class="el-icon-circle-close"></i>
+                    </span>
+                </span>
+            </div>
+        </draggable>
+    </div>
 </template>
 <script>
 import Locale from 'element-ui/src/mixins/locale';
@@ -33,51 +33,52 @@ import draggable from 'vuedraggable'
 
 export default {
 
-  name: 'ElUploadList',
+    name: 'ElUploadList',
 
-  mixins: [Locale],
+    mixins: [Locale],
 
-  data() {
-    return {
-      focusing: false,
-      filesClone:[]
-    };
-  },
-  components: { ElProgress, draggable },
+    data() {
+        return {
+            focusing: false,
+            filesClone: []
+        };
+    },
+    components: { ElProgress, draggable },
 
-  props: {
-    files: {
-      type: Array,
-      default () {
-        return [];
-      }
+    props: {
+        files: {
+            type: Array,
+            default () {
+                return [];
+            }
+        },
+        disabled: {
+            type: Boolean,
+            default: false
+        },
+        handlePreview: Function,
+        listType: String
     },
-    disabled: {
-      type: Boolean,
-      default: false
+    methods: {
+        parsePercentage(val) {
+            return parseInt(val, 10);
+        },
+        handleClick(file) {
+            if (file.status == 'success') {
+                this.handlePreview && this.handlePreview(file);
+            }
+        }
     },
-    handlePreview: Function,
-    listType: String
-  },
-  methods: {
-    parsePercentage(val) {
-      return parseInt(val, 10);
+    watch: {
+        filesClone(filesClone) {
+            if (filesClone.length) {
+                this.$emit('order-changed', filesClone)
+            }
+            //
+        }
     },
-    handleClick(file) {
-      this.handlePreview && this.handlePreview(file);
+    mounted() {
+        this.filesClone = this.files
     }
-  },
-  watch:{
-    filesClone(filesClone){
-      if(filesClone.length){
-        this.$emit('order-changed',filesClone)
-      }
-      //
-    }
-  },
-  mounted(){
-    this.filesClone = this.files
-  }
 };
-
 </script>

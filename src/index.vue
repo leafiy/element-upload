@@ -165,6 +165,11 @@ export default {
             this.uploadFiles.push(file);
             this.onChange(file, this.uploadFiles);
         },
+        handleAbort(rawFile) {
+
+            this.abort(rawFile)
+            this.handleRemove(rawFile)
+        },
         handleProgress(ev, rawFile) {
             const file = this.getFile(rawFile);
             this.onProgress(ev, file, this.uploadFiles);
@@ -272,6 +277,7 @@ export default {
           files={this.uploadFiles}
           on-order-changed={this.handleOrderChange}
           on-remove={this.handleRemove}
+          on-abort={this.handleAbort}
           handlePreview={this.onPreview}>
         </UploadList>
             );
