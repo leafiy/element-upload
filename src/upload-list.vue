@@ -12,12 +12,10 @@
                     <span class="el-upload-list2__item-preview" v-if="handlePreview && file.status ==='success'" @click="handlePreview(file)">
                         <i class="el-icon-zoom-in"></i>
                     </span>
-                    <span v-if="file.status ==='success'" class="el-upload-list2__item-delete" @click="$emit('remove', file)">
+                    <span class="el-upload-list2__item-delete" @click="$emit('remove', file)">
                         <i class="el-icon-delete"></i>
                     </span>
-                    <span v-if="file.status !== 'success'" class="el-upload-list2__item-delete" @click="$emit('abort', file)">
-                        <i class="el-icon-circle-close"></i>
-                    </span>
+
                 </span>
             </div>
         </draggable>

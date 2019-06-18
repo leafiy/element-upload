@@ -83,6 +83,14 @@ export default {
             type: Function,
             default: noop
         },
+        onTimeout: {
+            type: Function,
+            default: noop
+        },
+        timeout: {
+            type: Number,
+            default: 30000
+        },
         fileList: {
             type: Array,
             default () {
@@ -165,11 +173,6 @@ export default {
             this.uploadFiles.push(file);
             this.onChange(file, this.uploadFiles);
         },
-        handleAbort(rawFile) {
-
-            this.abort(rawFile)
-            this.handleRemove(rawFile)
-        },
         handleProgress(ev, rawFile) {
             const file = this.getFile(rawFile);
             this.onProgress(ev, file, this.uploadFiles);
@@ -197,6 +200,17 @@ export default {
 
             this.onError(err, file, this.uploadFiles);
             this.onChange(file, this.uploadFiles);
+        },
+        handleTimeout(err, rawFile) {
+            const file = this.getFile(rawFile);
+            const fileList = this.uploadFiles;
+
+            file.status = 'fail';
+
+            fileList.splice(fileList.indexOf(file), 1);
+            this.onTimeout(err, file)
+            this.onChange(file, this.uploadFiles);
+
         },
         handleOrderChange(files) {
             this.uploadFiles = files
@@ -277,7 +291,6 @@ export default {
           files={this.uploadFiles}
           on-order-changed={this.handleOrderChange}
           on-remove={this.handleRemove}
-          on-abort={this.handleAbort}
           handlePreview={this.onPreview}>
         </UploadList>
             );
@@ -300,12 +313,14 @@ export default {
                 listType: this.listType,
                 disabled: this.uploadDisabled,
                 limit: this.limit,
+                timeout: this.timeout,
                 'on-exceed': this.onExceed,
                 'on-start': this.handleStart,
                 'on-progress': this.handleProgress,
                 'on-success': this.handleSuccess,
                 'on-error': this.handleError,
                 'on-preview': this.onPreview,
+                'on-timeout': this.handleTimeout,
                 'on-remove': this.handleRemove,
                 'http-request': this.httpRequest
             },
