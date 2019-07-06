@@ -15,7 +15,6 @@
                     <span class="el-upload-list2__item-delete" @click="$emit('remove', file)">
                         <i class="el-icon-delete"></i>
                     </span>
-
                 </span>
             </div>
         </draggable>
@@ -68,15 +67,23 @@ export default {
         }
     },
     watch: {
+        files(files) {
+            this.filesClone = this.files
+        },
         filesClone(filesClone) {
             if (filesClone.length) {
                 this.$emit('order-changed', filesClone)
             }
-            //
+
         }
     },
     mounted() {
-        this.filesClone = this.files
+        this.files.forEach(item => {
+            if (!item.uid) {
+                item.uid = item.uid || (Date.now() + this.tempIndex++);
+            }
+        })
+
     }
 };
 </script>

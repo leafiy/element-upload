@@ -28,8 +28,15 @@ export default {
             default: ''
         }
     },
-
+    model: {
+        prop: 'fileList',
+        event: 'file-list-change'
+    },
     props: {
+        fileList: {
+            type: Array,
+            default: []
+        },
         action: {
             type: String,
             required: true
@@ -91,18 +98,6 @@ export default {
             type: Number,
             default: 30000
         },
-        fileList: {
-            type: Array,
-            default () {
-                return [];
-            }
-        },
-        value: {
-            type: Array,
-            default () {
-                return [];
-            }
-        },
         autoUpload: {
             type: Boolean,
             default: true
@@ -122,35 +117,44 @@ export default {
 
     data() {
         return {
-            uploadFiles: [],
+            // uploadFiles: [],
             dragOver: false,
             draging: false,
-            tempIndex: 1
+            tempIndex: 1,
+            list: []
         };
     },
 
     computed: {
         uploadDisabled() {
             return this.disabled || (this.elForm || {}).disabled;
+        },
+        uploadFiles: {
+            get: function() {
+                return this.list
+            },
+            set: function(uploadFiles) {
+
+                this.list = uploadFiles
+            }
         }
     },
 
     watch: {
-        fileList: {
-            immediate: true,
-            handler(fileList) {
-                this.uploadFiles = fileList.map(item => {
-                    item.uid = item.uid || (Date.now() + this.tempIndex++);
-                    item.status = item.status || 'success';
-                    return item;
-                });
+        fileList(fileList) {
+            if (JSON.stringify(fileList) === JSON.stringify(this.uploadFiles)) {
+                return
             }
+            this.list = fileList.map(item => {
+                item.uid = item.uid || (Date.now() + this.tempIndex++);
+                item.status = item.status || 'success';
+                return item;
+            });
         },
         uploadFiles(uploadFiles) {
-            this.$emit('input', uploadFiles)
+            this.$emit('file-list-change', uploadFiles)
         }
     },
-
     methods: {
         handleStart(rawFile) {
             rawFile.uid = Date.now() + this.tempIndex++;
@@ -214,6 +218,7 @@ export default {
         },
         handleOrderChange(files) {
             this.uploadFiles = files
+            // this.$emit('order-changed', files)
         },
         handleRemove(file, raw) {
             if (raw) {
