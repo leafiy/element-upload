@@ -218,7 +218,7 @@ export default {
         },
         handleOrderChange(files) {
             this.uploadFiles = files
-            // this.$emit('order-changed', files)
+            this.$emit('order-change', files)
         },
         handleRemove(file, raw) {
             if (raw) {
