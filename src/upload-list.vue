@@ -1,6 +1,6 @@
 <template>
     <div>
-        <draggable v-model="filesClone" @start="drag=true" @end="drag=false" class="el-upload-list2">
+        <draggable v-model="filesClone" @start="drag=true" @end="onEnd" class="el-upload-list2">
             <div v-for="file in files" :class="['el-upload-list2__item', 'is-' + file.status]" :key="file.uid" tabindex="0">
                 <div class="el-upload-list2__item-thumbnail" @click="handleClick(file)">
                     <div class="el-upload-list2__item-thumbnail-img" :style="'background-image:url(' +file.url+ ')'"></div>
@@ -57,6 +57,10 @@ export default {
         listType: String
     },
     methods: {
+        onEnd() {
+            this.drag = false
+            this.$emit('order-change', this.filesClone)
+        },
         parsePercentage(val) {
             return parseInt(val, 10);
         },
@@ -71,9 +75,9 @@ export default {
             this.filesClone = this.files
         },
         filesClone(filesClone) {
-            if (filesClone.length) {
-                this.$emit('order-changed', filesClone)
-            }
+            // if (filesClone.length) {
+            //     this.$emit('order-changed', filesClone)
+            // }
 
         }
     },
